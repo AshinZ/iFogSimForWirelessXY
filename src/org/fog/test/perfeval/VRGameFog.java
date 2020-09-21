@@ -73,10 +73,13 @@ public class VRGameFog {
 			
 			createFogDevices(broker.getId(), appId);
 			for(int i=0;i<fogDevices.size();++i){
-				fogDevices.get(i).showInfo();
+		//		fogDevices.get(i).showInfo();
+				System.out.print("输出device\n");
+				System.out.println(fogDevices.get(i));
+				System.out.print("\n");
 			}
 			System.out.print("\n");
-			for(int i =0 ;i<sensors.size();++i){
+		/*	for(int i =0 ;i<sensors.size();++i){
 				System.out.print(sensors.get(i).getName());
 				System.out.print("\n");
 				System.out.print(sensors.get(i).getId());
@@ -89,7 +92,7 @@ public class VRGameFog {
 				System.out.print(actuators.get(i).getId());
 				System.out.print("\n");
 			}
-			System.out.print("\n");
+			System.out.print("\n");*/
 			ModuleMapping moduleMapping = ModuleMapping.createModuleMapping(); // initializing a module mapping
 			
 			if(CLOUD){

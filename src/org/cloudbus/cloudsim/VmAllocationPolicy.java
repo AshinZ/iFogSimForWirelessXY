@@ -8,6 +8,8 @@
 
 package org.cloudbus.cloudsim;
 
+import org.fog.utils.FogLinearPowerModel;
+
 import java.util.List;
 import java.util.Map;
 

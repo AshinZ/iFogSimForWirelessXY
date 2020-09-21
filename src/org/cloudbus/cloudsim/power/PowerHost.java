@@ -35,7 +35,8 @@ public class PowerHost extends HostDynamicWorkload {
 
 	/** The power model. */
 	private PowerModel powerModel;
-
+	private double busypower;
+	private double idlePower;
 	/**
 	 * Instantiates a new host.
 	 * 
@@ -56,6 +57,7 @@ public class PowerHost extends HostDynamicWorkload {
 			PowerModel powerModel) {
 		super(id, ramProvisioner, bwProvisioner, storage, peList, vmScheduler);
 		setPowerModel(powerModel);
+		this.busypower = ()powerModel.
 	}
 
 	/**

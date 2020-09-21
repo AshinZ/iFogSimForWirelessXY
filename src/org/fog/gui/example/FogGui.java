@@ -33,6 +33,7 @@ import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.fog.gui.core.*;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.fog.application.AppEdge;
@@ -40,9 +41,6 @@ import org.fog.application.AppLoop;
 import org.fog.application.Application;
 import org.fog.application.selectivity.FractionalSelectivity;
 import org.fog.entities.*;
-import org.fog.gui.core.Bridge;
-import org.fog.gui.core.Graph;
-import org.fog.gui.core.GraphView;
 import org.fog.gui.dialog.AddActuator;
 import org.fog.gui.dialog.AddFogDevice;
 import org.fog.gui.dialog.AddLink;
@@ -87,6 +85,7 @@ public class FogGui extends JFrame {
 	static List<FogDevice> fogDevices = new ArrayList<FogDevice>();
 	static List<Sensor> sensors = new ArrayList<Sensor>();
 	static List<Actuator> actuators = new ArrayList<Actuator>();
+	static List<FogDeviceGuiData> fogDeviceGuiData = new ArrayList<FogDeviceGuiData>();
 	static boolean CLOUD = false;
 
 	static int numOfDepts = 2;
@@ -575,16 +574,13 @@ public class FogGui extends JFrame {
 	}
 
 	protected void openAddFogDeviceDialog() {
-		AddFogDevice fogDevice = new AddFogDevice(physicalGraph, FogGui.this , fogDevices);
+		AddFogDevice fogDevice = new AddFogDevice(physicalGraph, FogGui.this , fogDevices,fogDeviceGuiData);
     	physicalCanvas.repaint();
 	/*	for (int i = 0 ; i < fogDevices.size() ; ++ i){
             System.out.print("fogDevice输出\n");
             System.out.print(fogDevices.get(i).getRate());
 		    System.out.print("\nfogDevice输出\n");
         }*/
-        System.out.print("fogDevice输出\n");
-	    System.out.print(fogDevices.size());
-        System.out.print("\nfogDevice输出\n");
 	}
 
 	/** initialize Canvas */

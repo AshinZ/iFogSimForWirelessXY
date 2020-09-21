@@ -11,11 +11,13 @@ package org.fog.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.math3.analysis.function.Power;
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.lists.HostList;
 import org.cloudbus.cloudsim.lists.PeList;
+import org.cloudbus.cloudsim.power.PowerHost;
 import org.fog.utils.GeoCoverage;
 
 public class FogDeviceCharacteristics extends DatacenterCharacteristics{
@@ -74,6 +76,8 @@ public class FogDeviceCharacteristics extends DatacenterCharacteristics{
 	/** The cost per bw. */
 	private double costPerBw;
 
+	/** store the powerhost data **/
+	private PowerHost hostData;
 	/**
 	 * 
 	 * @param architecture the architecture of a resource
@@ -101,13 +105,14 @@ public class FogDeviceCharacteristics extends DatacenterCharacteristics{
 			String architecture,
 			String os,
 			String vmm,
-			final Host host,
+			final PowerHost host,
 			double timeZone,
 			double costPerSec,
 			double costPerMem,
 			double costPerStorage,
 			double costPerBw) {
 		super(architecture, os, vmm, new ArrayList<Host>(){{add(host);}} , timeZone, costPerSec, costPerMem, costPerStorage, costPerBw);
+		this.hostData = host;
 		setHostList(new ArrayList<Host>(){{add(host);}});
 		setId(-1);
 		setArchitecture(architecture);
@@ -117,7 +122,6 @@ public class FogDeviceCharacteristics extends DatacenterCharacteristics{
 		setCostPerSecond(costPerSec);
 
 		setTimeZone(0.0);
-
 		setVmm(vmm);
 		setCostPerMem(costPerMem);
 		setCostPerStorage(costPerStorage);
@@ -571,5 +575,9 @@ public class FogDeviceCharacteristics extends DatacenterCharacteristics{
 
 	public void setGeoCoverage(GeoCoverage geoCoverage) {
 		this.geoCoverage = geoCoverage;
+	}
+
+	public PowerHost getHost(){
+		return hostData;
 	}
 }

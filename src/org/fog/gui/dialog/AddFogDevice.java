@@ -31,6 +31,7 @@ import org.cloudbus.cloudsim.sdn.overbooking.PeProvisionerOverbooking;
 import org.fog.entities.FogDevice;
 import org.fog.entities.FogDeviceCharacteristics;
 import org.fog.gui.core.FogDeviceGui;
+import org.fog.gui.core.FogDeviceGuiData;
 import org.fog.gui.core.Graph;
 import org.fog.gui.core.SpringUtilities;
 import org.fog.policy.AppModuleAllocationPolicy;
@@ -44,6 +45,7 @@ public class AddFogDevice extends JDialog {
 	
 	private final Graph graph;
 	List<FogDevice> fogDevices = new ArrayList<FogDevice>();
+    List<FogDeviceGuiData> fogDeviceGuiData = new ArrayList<FogDeviceGuiData>();
 
 
 	private JLabel deviceNameLabel;
@@ -63,9 +65,10 @@ public class AddFogDevice extends JDialog {
 	private JTextField rate;
 
 
-	public AddFogDevice(final Graph graph, final JFrame frame, List<FogDevice> fogDevices) {
+	public AddFogDevice(final Graph graph, final JFrame frame, List<FogDevice> fogDevices, List <FogDeviceGuiData> fogDeviceGuiData) {
 		this.graph = graph;
 		this.fogDevices = fogDevices;
+		this.fogDeviceGuiData = fogDeviceGuiData;
 		setLayout(new BorderLayout());
 
 		add(createInputPanelArea(), BorderLayout.CENTER);
@@ -127,14 +130,15 @@ public class AddFogDevice extends JDialog {
 					catchedError = true;
 					prompt("Input should be numerical character", "Error");
 				}
-				if(!catchedError){
+				if(!catchedError){//执行加入的操作
 					FogDeviceGui fogDevice = new FogDeviceGui(deviceName.getText().toString(), mips_, ram_, upBw_, downBw_, level_, rate_);
 					graph.addNode(fogDevice);
 					setVisible(false);
-					//todo: busyPower and idlepower havn't been setted
 					//the name in list can't be dynamic changed
 					FogDevice addedfogdevide = createFogDevice(deviceName.getText().toString(), mips_, ram_, upBw_, downBw_, level_, rate_, 87.53, 82.44);
 					fogDevices.add(addedfogdevide);
+					FogDeviceGuiData addFogDeviceGuiData = new FogDeviceGuiData(deviceName.getText().toString(), mips_, ram_, upBw_, downBw_, level_, rate_,87.53, 82.44);
+				    fogDeviceGuiData.add(addFogDeviceGuiData);
 				}
 			}
 		});

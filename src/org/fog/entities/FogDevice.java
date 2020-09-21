@@ -71,6 +71,9 @@ public class FogDevice extends PowerDatacenter {
     protected double maxBufferSize; //最大buffer
     protected double usedBufferSize; //已使用buffer
     protected Queue<Pair<Double,Double>> buffer; //存储传来的buffer的队列
+    protected PowerHost host;
+    protected double idlePower;//用来获取数据进行文件存储
+    protected double busyPower;//
 
     public void setFogDevice(String name , int bandWidth , int rate , double costPerSecond , double calCost , double transCost ,
                      boolean allocated , int cloud ) throws Exception {
@@ -132,6 +135,7 @@ public class FogDevice extends PowerDatacenter {
         setVmList(new ArrayList<Vm>());
         setSchedulingInterval(schedulingInterval);*/
         //在super()中已经存在，不明白为什么要再设置一遍
+        this.host = characteristics.getHost();
         setUpLinkBandwidth(upLinkBandwidth);
         setDownLinkBandwidth(downLinkBandwidth);
         setUpLinkLatency(upLinkLatency);
@@ -920,6 +924,13 @@ public class FogDevice extends PowerDatacenter {
     }
     public  void setID(int id){
         super.setId(id);
+    }
+    public  double getBusyPower(){
+        return this.host.getPowerModel().getMaxPower();
+    }
+
+    public  double getIdlePower(){
+        return this.host.getSt
     }
 }
 
