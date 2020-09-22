@@ -110,6 +110,7 @@ public class AddSensor extends JDialog {
 							prompt("Input should be numerical character", "Error");
 						}
 						if(!catchedError){
+
 							SensorGui sensor = new SensorGui(sensorName.getText().toString(), _sensorType, (String)distribution.getSelectedItem(),
 									normalMean_, normalStdDev_, uniformLow_, uniformUp_, deterministicVal_);
 							graph.addNode(sensor);

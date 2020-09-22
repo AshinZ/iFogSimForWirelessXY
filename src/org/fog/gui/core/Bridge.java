@@ -480,7 +480,7 @@ public class Bridge {
                 fogdeviceObject.put("level",fogDevices.get(ifogdevices).getLevel());
                 fogdeviceObject.put("ratePerMips",fogDevices.get(ifogdevices).getRatePerMips());
                 fogdeviceObject.put("busyPower",fogDevices.get(ifogdevices).getBusyTime());
-                fogdeviceObject.put("idlePower",fogDevices.get(ifogdevices).get)
+          //      fogdeviceObject.put("idlePower",fogDevices.get(ifogdevices).get)
 
         }
 

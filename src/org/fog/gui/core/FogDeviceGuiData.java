@@ -106,4 +106,8 @@ public class FogDeviceGuiData {
     public double getIdlePower() {
         return this.idlePower;
     }
+
+    public void showInfo(){
+        System.out.print(this.nodeName);
+    }
 }

@@ -57,7 +57,7 @@ public class PowerHost extends HostDynamicWorkload {
 			PowerModel powerModel) {
 		super(id, ramProvisioner, bwProvisioner, storage, peList, vmScheduler);
 		setPowerModel(powerModel);
-		this.busypower = ()powerModel.
+
 	}
 
 	/**

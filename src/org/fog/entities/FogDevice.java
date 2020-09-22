@@ -925,13 +925,6 @@ public class FogDevice extends PowerDatacenter {
     public  void setID(int id){
         super.setId(id);
     }
-    public  double getBusyPower(){
-        return this.host.getPowerModel().getMaxPower();
-    }
-
-    public  double getIdlePower(){
-        return this.host.getSt
-    }
 }
 
 

@@ -82,11 +82,14 @@ public class FogGui extends JFrame {
 	private JButton btnRun;
 	
 	private String mode;  //'m':manual; 'i':import
-	static List<FogDevice> fogDevices = new ArrayList<FogDevice>();
-	static List<Sensor> sensors = new ArrayList<Sensor>();
-	static List<Actuator> actuators = new ArrayList<Actuator>();
-	static List<FogDeviceGuiData> fogDeviceGuiData = new ArrayList<FogDeviceGuiData>();
-	static boolean CLOUD = false;
+	private static List<FogDevice> fogDevices = new ArrayList<FogDevice>();
+	private static List<Sensor> sensors = new ArrayList<Sensor>();
+	private static List<Actuator> actuators = new ArrayList<Actuator>();
+	private  List<FogDeviceGuiData> fogDeviceGuiDataList = new ArrayList<FogDeviceGuiData>();
+	private  List<SensorGuiData> sensorGuiDataList = new ArrayList<SensorGuiData>();
+	private  List<ActuatorGuiData> actuatorGuiDataList = new ArrayList<ActuatorGuiData>();
+	private  List<LinkGuiData> linkGuiDataList = new ArrayList<LinkGuiData>();
+	private static boolean CLOUD = false;
 
 	static int numOfDepts = 2;
 	static int numOfMobilesPerDept = 2;
@@ -574,7 +577,7 @@ public class FogGui extends JFrame {
 	}
 
 	protected void openAddFogDeviceDialog() {
-		AddFogDevice fogDevice = new AddFogDevice(physicalGraph, FogGui.this , fogDevices,fogDeviceGuiData);
+		AddFogDevice fogDevice = new AddFogDevice(physicalGraph, FogGui.this , fogDevices,fogDeviceGuiDataList);
     	physicalCanvas.repaint();
 	/*	for (int i = 0 ; i < fogDevices.size() ; ++ i){
             System.out.print("fogDevice输出\n");
