@@ -5,6 +5,8 @@
 */
 package org.fog.gui.core;
 
+import org.json.simple.JSONObject;
+
 public class LinkGuiData {
     private String startNodeName;
     private String targetNodeName;
@@ -42,5 +44,13 @@ public class LinkGuiData {
 
     public void setTargetNodeName(String targetNodeName) {
         this.targetNodeName = targetNodeName;
+    }
+
+    public JSONObject toJson(){
+        JSONObject linkJson = new JSONObject();
+        linkJson.put("StartNodeName",getStartNodeName());
+        linkJson.put("targetNodeName",getTargetNodeName());
+        linkJson.put("latency",getLatency());
+        return linkJson;
     }
 }

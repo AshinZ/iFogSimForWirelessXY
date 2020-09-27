@@ -14,6 +14,7 @@ import javax.swing.*;
 import org.fog.entities.Sensor;
 import org.fog.gui.core.Graph;
 import org.fog.gui.core.SensorGui;
+import org.fog.gui.core.SensorGuiData;
 import org.fog.gui.core.SpringUtilities;
 import org.fog.utils.distribution.DeterministicDistribution;
 
@@ -23,6 +24,7 @@ public class AddSensor extends JDialog {
 	
 	private final Graph graph;
 	List<Sensor> sensors = new ArrayList<Sensor>();
+	List <SensorGuiData> sensorGuiDataList = new ArrayList<SensorGuiData>();
 	private JTextField sensorName;
 	private JTextField sensorType;
 	private JComboBox distribution;
@@ -38,9 +40,10 @@ public class AddSensor extends JDialog {
 	 * 
 	 * @param frame the parent frame
 	 */
-	public AddSensor(final Graph graph, final JFrame frame , List<Sensor> sensors) {
+	public AddSensor(final Graph graph, final JFrame frame , List<Sensor> sensors, List <SensorGuiData> sensorGuiDataList) {
 		this.graph = graph;
 		this.sensors = sensors;
+		this.sensorGuiDataList = sensorGuiDataList;
 		setLayout(new BorderLayout());
 
 		add(createInputPanelArea(), BorderLayout.CENTER);
@@ -132,6 +135,9 @@ public class AddSensor extends JDialog {
 					}
 					Sensor newSensor = new Sensor(sensorName.getText().toString(), sensorType.getText(), -1, "test", new DeterministicDistribution(deterministicVal_));
 					sensors.add(newSensor);
+					SensorGuiData addSensorGuiData = new SensorGuiData(sensorName.getText().toString(), _sensorType, (String)distribution.getSelectedItem(),
+							normalMean_, normalStdDev_, uniformLow_, uniformUp_, deterministicVal_);
+					sensorGuiDataList.add(addSensorGuiData);
 				}
 			}
 		});

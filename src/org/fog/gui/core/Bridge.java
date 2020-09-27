@@ -39,7 +39,8 @@ public class Bridge {
 	}
 	// 数据中转桥梁文件 用于json数据和我们使用的graph/fogdevices数据的输入输出
 	// 考虑到graph和fogdevice数据的不相同，所以需要重写转换方法
-	// convert from JSON object to Graph object
+	// convert from JSON object to Graph object0
+
 	public static Graph jsonToGraph(String fileName, int type){
 		
 		Graph graph = new Graph();
@@ -191,11 +192,120 @@ public class Bridge {
 
 
 	//重载jsonToGraph方法
-	public  static void jsonToGraph(String fileName, int type, List<FogDevice> fogDevices, List<Sensor> sensors , List <Actuator> actuators , Graph graph){
-        Graph graphList = new Graph();
-        List <FogDevice> fogDevicesList = new ArrayList<FogDevice>();
-        List <Sensor>    sensorsList    = new ArrayList<Sensor>();
-        List <Actuator>  actuatorsList  = new ArrayList<Actuator>();
+	public  static void jsonToGraph(String fileName,
+									int type,
+									List<FogDevice> fogDevices,
+									List<Sensor> sensors ,
+									List <Actuator> actuators ,
+									Graph graph,
+									List <FogDeviceGuiData> fogDeviceGuiDataList,
+									List <SensorGuiData> sensorGuiDataList,
+									List <ActuatorGuiData> actuatorGuiDataList,
+									List <LinkGuiData> linkGuiDataList
+									){
+		System.out.print("*****************");
+		System.out.print("start parse json");
+		System.out.print("*****************");
+		try {
+			JSONObject doc = (JSONObject) JSONValue.parse(new FileReader(fileName));
+			JSONArray nodes = (JSONArray) doc.get("nodes");
+			@SuppressWarnings("unchecked")//告知编译器忽略 unchecked警告信息
+					Iterator<JSONObject> iter =nodes.iterator();
+			while(iter.hasNext()){
+				JSONObject node = iter.next();
+				String nodeType = (String) node.get("type");
+				String nodeName = (String) node.get("name");
+
+				if(nodeType.equalsIgnoreCase("host")){  //host
+					long pes = (Long) node.get("pes");
+					long mips = (Long) node.get("mips");
+					int ram = new BigDecimal((Long)node.get("ram")).intValueExact();
+					long storage = (Long) node.get("storage");
+					long bw = new BigDecimal((Long)node.get("bw")).intValueExact();
+
+					int num = 1;
+					if (node.get("nums")!= null)
+						num = new BigDecimal((Long)node.get("nums")).intValueExact();
+
+					for(int n = 0; n< num; n++) {
+						Node hNode = new HostNode(nodeName, nodeType, pes, mips, ram, storage, bw);
+						graph.addNode(hNode);
+					}
+
+				} else if(nodeType.equals("FOG_DEVICE")){
+					long mips = (Long) node.get("mips");
+					int ram = new BigDecimal((Long)node.get("ram")).intValueExact();
+					long upBw = new BigDecimal((Long)node.get("upBw")).intValueExact();
+					long downBw = new BigDecimal((Long)node.get("downBw")).intValueExact();
+					int level = new BigDecimal((Long)node.get("level")).intValue();
+					double rate = new BigDecimal((Double)node.get("ratePerMips")).doubleValue();
+
+					Node fogDevice = new FogDeviceGui(nodeName, mips, ram, upBw, downBw, level, rate);
+					graph.addNode(fogDevice);
+
+				} else if(nodeType.equals("SENSOR")){
+					String sensorType = node.get("sensorType").toString();
+					int distType = new BigDecimal((Long)node.get("distribution")).intValue();
+					Distribution distribution = null;
+					if(distType == Distribution.DETERMINISTIC)
+						distribution = new DeterministicDistribution(new BigDecimal((Double)node.get("value")).doubleValue());
+					else if(distType == Distribution.NORMAL){
+						distribution = new NormalDistribution(new BigDecimal((Double)node.get("mean")).doubleValue(),
+								new BigDecimal((Double)node.get("stdDev")).doubleValue());
+					} else if(distType == Distribution.UNIFORM){
+						distribution = new UniformDistribution(new BigDecimal((Double)node.get("min")).doubleValue(),
+								new BigDecimal((Double)node.get("max")).doubleValue());
+					}
+					System.out.println("Sensor type : "+sensorType);
+					Node sensor = new SensorGui(nodeName, sensorType, distribution);
+					graph.addNode(sensor);
+				} else if(nodeType.equals("ACTUATOR")){
+					String actuatorType = node.get("actuatorType").toString();
+					Node actuator = new ActuatorGui(nodeName, actuatorType);
+					graph.addNode(actuator);
+				} else {   //switch
+					int bw = new BigDecimal((Long)node.get("bw")).intValueExact();
+					long iops = (Long) node.get("iops");
+					int upports =  new BigDecimal((Long)node.get("upports")).intValueExact();
+					int downports = new BigDecimal((Long)node.get("downports")).intValueExact();
+
+					Node sNode = new SwitchNode(nodeName, nodeType, iops, upports, downports, bw);
+					graph.addNode(sNode);
+				}
+			}
+
+			JSONArray links = (JSONArray) doc.get("links");
+			@SuppressWarnings("unchecked")
+			Iterator<JSONObject> linksIter =links.iterator();
+			while(linksIter.hasNext()){
+				JSONObject link = linksIter.next();
+				String src = (String) link.get("source");
+				String dst = (String) link.get("destination");
+				double lat = (Double) link.get("latency");
+
+				Node source = (Node) getNode(graph, src);
+				Node target = (Node) getNode(graph, dst);
+
+				if(source!=null && target!=null){
+					System.out.println("Adding edge between "+source.getName()+" & "+target.getName());
+					Edge edge = new Edge(target, lat);
+					graph.addEdge(source, edge);
+				}
+			}
+			//以上为原有的处理graph的封包，接下来我们处理我们自己添加的一些数据格式。
+			JSONObject data = (JSONObject) JSONValue.parse(new FileReader(fileName));
+			JSONArray fogDeviceData = (JSONArray) doc.get("fogDeviceData");
+			@SuppressWarnings("unchecked")//告知编译器忽略 unchecked警告信息
+					Iterator<JSONObject> fogDeviceIter =fogDeviceData.iterator();
+			while(fogDeviceIter.hasNext()) {
+				JSONObject node = fogDeviceIter.next();
+				//因为数据格式我们都是知道的，所以我们直接对数据进行解析
+
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// convert from Graph object to JSON object
@@ -336,156 +446,55 @@ public class Bridge {
 	}
 
 	//重载graphToJson方法
-    public static String  graphToJson(Graph graph , List<FogDevice> fogDevices,List<Sensor> sensors ,List<Actuator> actuators){
-        System.out.println();
+	@SuppressWarnings("unchecked")
+    public static String  graphToJson(Graph graph ,
+									  List<FogDeviceGuiData> fogDevicesGuiDataList,
+									  List<SensorGuiData> sensorsGuiDataList,
+									  List<ActuatorGuiData> actuatorsGuiDataList,
+									  List<LinkGuiData> linkGuiDataList){
         System.out.println("*****************************");
         System.out.println("start change");
         System.out.println("*****************************");
-        if(graph.getAdjacencyList().size()<1){
-            return "graph is empty";
-        }
-        Map<Node, List<Node>> edgeList = new HashMap<Node, List<Node>>();
-
-        JSONObject topo = new JSONObject();
-        JSONArray nodes = new JSONArray();
-        JSONArray links = new JSONArray();
-
-        for (Entry<Node, List<Edge>> entry : graph.getAdjacencyList().entrySet()) {
-            Node srcNode = entry.getKey();
-
-            // add node
-            JSONObject jobj = new JSONObject();
-            switch(srcNode.getType()){
-                case "ACTUATOR":
-                    ActuatorGui actuator = (ActuatorGui)srcNode;
-                    jobj.put("name", actuator.getName());
-                    jobj.put("type", actuator.getType());
-                    jobj.put("actuatorType", actuator.getActuatorType());
-                    break;
-                case "SENSOR":
-                    SensorGui sensor = (SensorGui)srcNode;
-                    jobj.put("name", sensor.getName());
-                    jobj.put("sensorType", sensor.getSensorType());
-                    jobj.put("type", sensor.getType());
-                    jobj.put("distribution", sensor.getDistributionType());
-                    if(sensor.getDistributionType()==Distribution.DETERMINISTIC)
-                        jobj.put("value", ((DeterministicDistribution)sensor.getDistribution()).getValue());
-                    else if(sensor.getDistributionType()==Distribution.NORMAL){
-                        jobj.put("mean", ((NormalDistribution)sensor.getDistribution()).getMean());
-                        jobj.put("stdDev", ((NormalDistribution)sensor.getDistribution()).getStdDev());
-                    } else if(sensor.getDistributionType()==Distribution.UNIFORM){
-                        jobj.put("min", ((UniformDistribution)sensor.getDistribution()).getMin());
-                        jobj.put("max", ((UniformDistribution)sensor.getDistribution()).getMax());
-                    }
-                    break;
-                case "FOG_DEVICE":
-                    FogDeviceGui fogDevice = (FogDeviceGui)srcNode;
-                    jobj.put("name", fogDevice.getName());
-                    jobj.put("type", fogDevice.getType());
-                    jobj.put("mips", fogDevice.getMips());
-                    jobj.put("ram", fogDevice.getRam());
-                    jobj.put("upBw", fogDevice.getUpBw());
-                    jobj.put("downBw", fogDevice.getDownBw());
-                    jobj.put("level", fogDevice.getLevel());
-                    jobj.put("ratePerMips", fogDevice.getRatePerMips());
-                    break;
-                case "host":
-                    HostNode hNode = (HostNode)srcNode;
-                    jobj.put("name", hNode.getName());
-                    jobj.put("type", hNode.getType());
-                    jobj.put("pes", hNode.getPes());
-                    jobj.put("mips", hNode.getMips());
-                    jobj.put("ram", hNode.getRam());
-                    jobj.put("storage", hNode.getStorage());
-                    jobj.put("bw", hNode.getBw());
-                    break;
-                case "core":
-                case "edge":
-                    SwitchNode sNode = (SwitchNode)srcNode;
-                    jobj.put("name", sNode.getName());
-                    jobj.put("type", sNode.getType());
-                    jobj.put("iops", sNode.getIops());
-                    jobj.put("upports", sNode.getDownports());
-                    jobj.put("downports", sNode.getDownports());
-                    jobj.put("bw", sNode.getBw());
-                    break;
-                case "vm":
-                    VmNode vNode = (VmNode)srcNode;
-                    jobj.put("name", vNode.getName());
-                    jobj.put("type", vNode.getType());
-                    jobj.put("size", vNode.getSize());
-                    jobj.put("pes", vNode.getPes());
-                    jobj.put("mips", vNode.getMips());
-                    jobj.put("ram", vNode.getRam());
-                    break;
-            }
-            nodes.add(jobj);
-
-            // add edge
-            for (Edge edge : entry.getValue()) {
-                Node destNode = edge.getNode();
-
-                // check if edge exist (dest->src)
-                if (edgeList.containsKey(destNode) && edgeList.get(destNode).contains(srcNode)) {
-                    continue;
-                }
-
-                JSONObject jobj2 = new JSONObject();
-                jobj2.put("source", srcNode.getName());
-                jobj2.put("destination", destNode.getName());
-                if("host"==destNode.getType() || "core"==destNode.getType() || "edge"==destNode.getType() ||
-                        "FOG_DEVICE"==destNode.getType() || "SENSOR"==destNode.getType() || "ACTUATOR"==destNode.getType()){
-                    jobj2.put("latency", edge.getLatency());
-                }else if("vm"==destNode.getName()){
-                    if(edge.getBandwidth()>0){
-                        jobj2.put("bandwidth", edge.getBandwidth());
-                    }
-                }
-                links.add(jobj2);
-
-                // add exist edge to the edgeList
-                if (edgeList.containsKey(entry.getKey())) {
-                    edgeList.get(entry.getKey()).add(edge.getNode());
-                } else {
-                    List<Node> ns = new ArrayList<Node>();
-                    ns.add(edge.getNode());
-                    edgeList.put(entry.getKey(), ns);
-                }
-
-            }
-        }
-        topo.put("nodes", nodes);
-        topo.put("links", links);
-
-        StringWriter out = new StringWriter();
-        String jsonText = "";
-        try {
-            topo.writeJSONString(out);
-            jsonText = out.toString();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        String graphString = graphToJson(graph);
         //上面是graph的输出
-        // fogdevice输出
-        //String nodeName, long mips,int ram, long upBw, long downBw, int level, double ratePerMips, double busyPower, double idlePower)
-        JSONArray fogdevicesToJson = new JSONArray() ;
-        int ifogdevices = 0;
-        for (ifogdevices = 0; ifogdevices < fogDevices.size() ; ifogdevices++) {
-                JSONObject fogdeviceObject = new JSONObject();
-                fogdeviceObject.put("nodeName",fogDevices.get(ifogdevices).getName());
-                fogdeviceObject.put("mips",fogDevices.get(ifogdevices).getMips());
-                fogdeviceObject.put("upBw", fogDevices.get(ifogdevices).getUpLinkBandwidth());
-                fogdeviceObject.put("downBw",fogDevices.get(ifogdevices).getDownLinkBandwidth());
-                fogdeviceObject.put("level",fogDevices.get(ifogdevices).getLevel());
-                fogdeviceObject.put("ratePerMips",fogDevices.get(ifogdevices).getRatePerMips());
-                fogdeviceObject.put("busyPower",fogDevices.get(ifogdevices).getBusyTime());
-          //      fogdeviceObject.put("idlePower",fogDevices.get(ifogdevices).get)
+        // 输出fogDeviceGuiDataList
+        //四个array放数据
+		JSONArray fogDeviceData = new JSONArray();
+		JSONArray sensorData = new JSONArray();
+		JSONArray actuatorData = new JSONArray();
+		JSONArray linkData = new JSONArray();
+		//数据转json传入array中
+		for (FogDeviceGuiData fogDeviceGuiData :fogDevicesGuiDataList){
+				fogDeviceData.add(fogDeviceGuiData.toJson());
+		}
+		for(SensorGuiData sensorGuiData :sensorsGuiDataList){
+				sensorData.add(sensorGuiData.toJson());
+		}
+		for (ActuatorGuiData actuatorGuiData :actuatorsGuiDataList){
+				actuatorData.add(actuatorGuiData.toJson());
+		}
+		for (LinkGuiData linkGuiData : linkGuiDataList){
+				linkData.add(linkGuiData.toJson());
+		}
+		//用一个json对象存储整个数据 这样可以帮助读取的时候进行解析
+		JSONObject allData = new JSONObject();
+		allData.put("linkData",linkData);
+		allData.put("actuatorData",actuatorData);
+		allData.put("sensorData",sensorData);
+		allData.put("fogDeviceData",fogDeviceData);
 
-        }
-
-
-        //System.out.println(jsonText);
-        return jsonText;
+		//jsonToString
+		StringWriter out = new StringWriter();
+		String jsonText = "";
+		try {
+			allData.writeJSONString(out);
+			jsonText = out.toString();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return graphString + '\n'+jsonText;
     }
+
+
 }

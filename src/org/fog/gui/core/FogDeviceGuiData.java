@@ -6,6 +6,8 @@
 // 模拟gui输入的数据 将其作为一个data数据留存  主要用于gui的文件功能 (fogdevice)
 package org.fog.gui.core;
 
+import org.json.simple.JSONObject;
+
 import java.awt.dnd.DragSourceMotionListener;
 
 public class FogDeviceGuiData {
@@ -109,5 +111,19 @@ public class FogDeviceGuiData {
 
     public void showInfo(){
         System.out.print(this.nodeName);
+    }
+
+    public JSONObject toJson(){
+        JSONObject fogDeviceJson  = new JSONObject();
+        fogDeviceJson.put("nodeName",getNodeName());
+        fogDeviceJson.put("mips",getMips());
+        fogDeviceJson.put("ram",getRam());
+        fogDeviceJson.put("upBw",getUpBw());
+        fogDeviceJson.put("downBw",getDownBw());
+        fogDeviceJson.put("level",getLevel());
+        fogDeviceJson.put("ratePerMips",getRatePerMips());
+        fogDeviceJson.put("bustPower",getBusyPower());
+        fogDeviceJson.put("idlePower",getIdlePower());
+        return fogDeviceJson;
     }
 }

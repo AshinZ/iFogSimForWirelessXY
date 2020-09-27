@@ -5,6 +5,8 @@
 */
 package org.fog.gui.core;
 
+import org.json.simple.JSONObject;
+
 public class SensorGuiData {
     private String name ;  //传感器名字
     private String sensorType ;  //传感器类型
@@ -94,5 +96,18 @@ public class SensorGuiData {
 
     public double getMean() {
         return mean;
+    }
+
+    public JSONObject toJson(){
+        JSONObject sensorJson = new JSONObject();
+        sensorJson.put("name",getName());
+        sensorJson.put("sensorType",getSensorType());
+        sensorJson.put("distributionType",getDistributionType());
+        sensorJson.put("mean",getMean());
+        sensorJson.put("stdDev",getStdDev());
+        sensorJson.put("min",getMin());
+        sensorJson.put("max",getMax());
+        sensorJson.put("deterministicValue",getDeterministicValue());
+        return sensorJson;
     }
 }

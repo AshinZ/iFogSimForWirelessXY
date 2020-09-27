@@ -561,19 +561,21 @@ public class FogGui extends JFrame {
     }
 
 	protected void openAddActuatorDialog() {
-		AddActuator actuator = new AddActuator(physicalGraph, FogGui.this  , actuators);
+		AddActuator actuator = new AddActuator(physicalGraph, FogGui.this  , actuators,actuatorGuiDataList);
 		physicalCanvas.repaint();
+        System.out.print("act个数："+actuatorGuiDataList.size()+"\n");
 	}
 
     protected void openAddSensorDialog() {
-        AddSensor sensor = new AddSensor(physicalGraph, FogGui.this  ,  sensors);
+        AddSensor sensor = new AddSensor(physicalGraph, FogGui.this  ,  sensors, sensorGuiDataList);
         physicalCanvas.repaint();
+        System.out.print("sensor个数："+sensorGuiDataList.size()+"\n");
     }
 
 	protected void openAddLinkDialog() {
-		AddLink phyEdge = new AddLink(physicalGraph, FogGui.this  ,  fogDevices , sensors , actuators);
+		AddLink phyEdge = new AddLink(physicalGraph, FogGui.this  ,  fogDevices , sensors , actuators,linkGuiDataList);
     	physicalCanvas.repaint();
-		
+        System.out.print("link个数："+linkGuiDataList.size()+"\n");
 	}
 
 	protected void openAddFogDeviceDialog() {
@@ -638,7 +640,8 @@ public class FogGui extends JFrame {
         int ret = fileopen.showSaveDialog(panel);
 
         if (ret == JFileChooser.APPROVE_OPTION) {
-        	String jsonText = graph.toJsonString();
+        	//直接传入数据进行调用
+        	String jsonText =Bridge.graphToJson(graph,fogDeviceGuiDataList,sensorGuiDataList ,actuatorGuiDataList, linkGuiDataList);
         	System.out.println(jsonText);
             String path = fileopen.getSelectedFile().toString();
             File file = new File(path);

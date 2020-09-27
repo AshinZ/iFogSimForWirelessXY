@@ -30,11 +30,7 @@ import javax.swing.JTextField;
 import org.fog.entities.Actuator;
 import org.fog.entities.FogDevice;
 import org.fog.entities.Sensor;
-import org.fog.gui.core.Edge;
-import org.fog.gui.core.Graph;
-import org.fog.gui.core.Link;
-import org.fog.gui.core.Node;
-import org.fog.gui.core.NodeCellRenderer;
+import org.fog.gui.core.*;
 
 /** A dialog to add a new edge */
 public class AddLink extends JDialog {
@@ -42,18 +38,20 @@ public class AddLink extends JDialog {
     List<FogDevice> fogDevices = new ArrayList<FogDevice>();
 	List<Sensor> sensors = new ArrayList<Sensor>();
 	List<Actuator> actuators = new ArrayList<Actuator>();
+	List <LinkGuiData> linkGuiDataList = new ArrayList<LinkGuiData>();
 	private final Graph graph;
 	private JComboBox sourceNode;
 	private JComboBox targetNode;
 	private JTextField tfLatency;
 
 
-	public AddLink(final Graph graph, final JFrame frame  , List<FogDevice> fogDevices,List<Sensor> sensors ,List<Actuator> actuators) {
+	public AddLink(final Graph graph, final JFrame frame  , List<FogDevice> fogDevices,List<Sensor> sensors ,List<Actuator> actuators,List<LinkGuiData> linkGuiDataList) {
 
 		this.graph = graph;
 		this.fogDevices = fogDevices;
 		this.sensors = sensors;
 		this.actuators = actuators;
+		this.linkGuiDataList = linkGuiDataList;
 		setLayout(new BorderLayout());
 
 		add(createInputPanel(), BorderLayout.CENTER);
@@ -206,7 +204,7 @@ public class AddLink extends JDialog {
 						Link edge = new Link(target, latency);
 						graph.addEdge(source, edge);
 						setVisible(false);
-						int sourceType = 0; //起始点类型 0 :fog 1:sensor   2: actut
+						int sourceType = 0; //起始点类型 0 :fog 1:sensor   2: actuator
 						int targetType = 0; //指向点类型
 						int sourceNum  = 0;//起始点在相应集合中的序号
 						int targetId   = 0;//m目标点在相应集合中的序号
@@ -260,6 +258,9 @@ public class AddLink extends JDialog {
 							actuators.get(sourceNum).setGatewayDeviceId(targetId);
 							actuators.get(sourceNum).setLatency(Double.parseDouble(tfLatency.getText()));
 						}
+						LinkGuiData addLinkGuiData = new LinkGuiData(sourceNode.getName(),targetNode.getName(),Double.parseDouble(tfLatency.getText()));
+						linkGuiDataList.add(addLinkGuiData);
+
 
 					}
 				}

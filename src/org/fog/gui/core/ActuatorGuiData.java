@@ -5,6 +5,8 @@
 */
 package org.fog.gui.core;
 
+import org.json.simple.JSONObject;
+
 public class ActuatorGuiData {
     private String name;
     //设计到数据划分的问题
@@ -35,5 +37,12 @@ public class ActuatorGuiData {
 
     public void setActuatorType(String actuatorType) {
         this.actuatorType = actuatorType;
+    }
+
+    public JSONObject toJson(){
+        JSONObject actuatorJson = new JSONObject();
+        actuatorJson.put("name",getName());
+        actuatorJson.put("actuatorType",getActuatorType());
+        return actuatorJson;
     }
 }

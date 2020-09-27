@@ -22,6 +22,7 @@ import javax.swing.UIManager;
 
 import org.fog.entities.Actuator;
 import org.fog.gui.core.ActuatorGui;
+import org.fog.gui.core.ActuatorGuiData;
 import org.fog.gui.core.Graph;
 import org.fog.gui.core.SpringUtilities;
 
@@ -31,6 +32,7 @@ public class AddActuator extends JDialog {
 	
 	private final Graph graph;
 	List<Actuator> actuators = new ArrayList<Actuator>();
+	List<ActuatorGuiData> actuatorGuiDataList = new ArrayList<ActuatorGuiData>();
 	private JTextField actuatorName;
 	private JTextField actuatorType;
 	
@@ -39,9 +41,10 @@ public class AddActuator extends JDialog {
 	 * 
 	 * @param frame the parent frame
 	 */
-	public AddActuator(final Graph graph, final JFrame frame , List<Actuator> actuators) {
+	public AddActuator(final Graph graph, final JFrame frame , List<Actuator> actuators, List <ActuatorGuiData> actuatorGuiDataList) {
 		this.graph = graph;
 		this.actuators = actuators ;
+		this.actuatorGuiDataList = actuatorGuiDataList;
 		setLayout(new BorderLayout());
 
 		add(createInputPanelArea(), BorderLayout.CENTER);
@@ -85,6 +88,8 @@ public class AddActuator extends JDialog {
 					}
 					Actuator newActuator = new Actuator(actuatorName.getText(), -1, "test", actuatorType.getText());
 					actuators.add(newActuator);
+					ActuatorGuiData addActuatorGuiData = new ActuatorGuiData(actuatorName.getText(),actuatorType.getText());
+					actuatorGuiDataList.add(addActuatorGuiData);
 				}
 			}
 		});
