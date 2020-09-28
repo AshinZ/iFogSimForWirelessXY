@@ -48,7 +48,7 @@ public class LinkGuiData {
 
     public JSONObject toJson(){
         JSONObject linkJson = new JSONObject();
-        linkJson.put("StartNodeName",getStartNodeName());
+        linkJson.put("startNodeName",getStartNodeName());
         linkJson.put("targetNodeName",getTargetNodeName());
         linkJson.put("latency",getLatency());
         return linkJson;

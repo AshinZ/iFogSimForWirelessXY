@@ -15,6 +15,7 @@ import java.util.Map.Entry;
 import org.fog.entities.Actuator;
 import org.fog.entities.FogDevice;
 import org.fog.entities.Sensor;
+import org.fog.utils.JsonToTopology;
 import org.fog.utils.distribution.DeterministicDistribution;
 import org.fog.utils.distribution.Distribution;
 import org.fog.utils.distribution.NormalDistribution;
@@ -294,14 +295,73 @@ public class Bridge {
 			}
 			//以上为原有的处理graph的封包，接下来我们处理我们自己添加的一些数据格式。
 			JSONObject data = (JSONObject) JSONValue.parse(new FileReader(fileName));
+			//读取fogdevice
 			JSONArray fogDeviceData = (JSONArray) doc.get("fogDeviceData");
 			@SuppressWarnings("unchecked")//告知编译器忽略 unchecked警告信息
 					Iterator<JSONObject> fogDeviceIter =fogDeviceData.iterator();
 			while(fogDeviceIter.hasNext()) {
 				JSONObject node = fogDeviceIter.next();
 				//因为数据格式我们都是知道的，所以我们直接对数据进行解析
+				String nodeName =(String) node.get("nodeName");
+				long   mips  = (Long)node.get("mips");
+				int ram = (int)node.get("ram");
+				long upBw = (Long) node.get("upBw");
+				long downBw = (Long) node.get("downBw");
+				int level = (int) node.get("level");
+				double ratePerMips = (double) node.get("ratePerMips");
+				double busyPower = (double) node.get("busyPower");
+				double idlePower = (double) node.get("idlePower");
+				FogDeviceGuiData addFogDeviceData = new FogDeviceGuiData(nodeName,mips,ram,upBw,downBw,level,ratePerMips,busyPower,idlePower);
+				fogDeviceGuiDataList.add(addFogDeviceData);
+				// TODO: 2020/9/28 将数据变成数据列表和fogdevice列表抽象出来，这样可以在addFogDevice和这里同时调用 
+			//	fogDevices.add(addFogDeviceData.getFogDevice());
+			}
+
+			//sensorData
+			JSONArray sensorData = (JSONArray) doc.get("sensorData");
+			Iterator <JSONObject> sensorIter = sensorData.iterator();
+			while(sensorIter.hasNext()) {
+				JSONObject node = sensorIter.next();
+				String name = (String) node.get("name");  //传感器名字
+				String sensorType = (String) node.get("sensorType");  //传感器类型
+				String distributionType = (String) node.get("distributionType");  //分布方式
+				double mean = (double) node.get("mean");  //
+				double stdDev = (double) node.get("stdDev"); //
+				double min = (double) node.get("min");  //
+				double max = (double) node.get("max");  //
+				double deterministicValue = (double) node.get("deterministicValue"); //
+				SensorGuiData addSensorData = new SensorGuiData(name, sensorType, distributionType, mean, stdDev, min, max, deterministicValue);
+				sensorGuiDataList.add(addSensorData);
+				//		sensors.add(addsensorData.getSensor());
+			}
+			//actuator
+			JSONArray actuatorData = (JSONArray) doc.get("actuatorData");
+			Iterator <JSONObject> actuatorIter = actuatorData.iterator();
+			while(actuatorIter.hasNext()){
+				JSONObject node = actuatorIter.next();
+				String name = (String)node.get("name") ;
+				String actuatorType = (String) node.get("actuatorType");
+				ActuatorGuiData addActuatorData = new ActuatorGuiData(name,actuatorType);
+				actuatorGuiDataList.add(addActuatorData);
+				//   actuator.add(addactuatorData.getActuator());
+			}
+
+			//Link
+			JSONArray linkData = (JSONArray) doc.get("linkData");
+			Iterator <JSONObject> linkIter = linkData.iterator();
+			while(linkIter.hasNext()){
+				JSONObject node= linkIter.next();
+				String startNodeName = (String) node.get("startNodeName");
+				String targetNodeName = (String) node.get("targetNodeName");
+				double latency = (double) node.get("latency");
+				LinkGuiData addLinkData = new LinkGuiData(startNodeName,targetNodeName,latency);
+				linkGuiDataList.add(addLinkData);
+				// TODO: 2020/9/28 数据格式添加
 
 			}
+
+
+
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

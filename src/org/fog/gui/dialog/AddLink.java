@@ -258,10 +258,8 @@ public class AddLink extends JDialog {
 							actuators.get(sourceNum).setGatewayDeviceId(targetId);
 							actuators.get(sourceNum).setLatency(Double.parseDouble(tfLatency.getText()));
 						}
-						LinkGuiData addLinkGuiData = new LinkGuiData(sourceNode.getName(),targetNode.getName(),Double.parseDouble(tfLatency.getText()));
+						LinkGuiData addLinkGuiData = new LinkGuiData(((Node) sourceNode.getSelectedItem()).getName(), ((Node) targetNode.getSelectedItem()).getName(),Double.parseDouble(tfLatency.getText()));
 						linkGuiDataList.add(addLinkGuiData);
-
-
 					}
 				}
 
