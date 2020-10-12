@@ -168,7 +168,7 @@ public class FogGui extends JFrame {
 		    	checkImportStatus();
 		    }
 		};
-		
+		//事件触发器
 		ActionListener addFogDeviceListener = new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		    	openAddFogDeviceDialog();
@@ -204,10 +204,18 @@ public class FogGui extends JFrame {
 		    	openAddSensorDialog();
 		    }
 		};
+		//打开文件
 		ActionListener importPhyTopoListener = new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		    	String fileName = importFile("json");
-		    	Graph phyGraph= Bridge.jsonToGraph(fileName, 0);
+		    	Graph phyGraph= Bridge.json2Graph(fileName,0,
+													fogDevices,
+													sensors,
+													actuators,
+													fogDeviceGuiDataList,
+													sensorGuiDataList,
+													actuatorGuiDataList,
+													linkGuiDataList);
 		    	physicalGraph = phyGraph;
 		    	physicalCanvas.setGraph(physicalGraph);
 		    	physicalCanvas.repaint();
@@ -641,7 +649,7 @@ public class FogGui extends JFrame {
 
         if (ret == JFileChooser.APPROVE_OPTION) {
         	//直接传入数据进行调用
-        	String jsonText =Bridge.graphToJson(graph,fogDeviceGuiDataList,sensorGuiDataList ,actuatorGuiDataList, linkGuiDataList);
+        	String jsonText =Bridge.graph2Json(graph,fogDeviceGuiDataList,sensorGuiDataList ,actuatorGuiDataList, linkGuiDataList);
         	System.out.println(jsonText);
             String path = fileopen.getSelectedFile().toString();
             File file = new File(path);
