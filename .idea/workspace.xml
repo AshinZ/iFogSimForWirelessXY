@@ -1,26 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="aa7fcddf-4e28-48f6-bb11-026a66db9831" name="默认更改列表" comment="10.12 update：&#10;1、完成gui数据的导入&#10;2、修复了部分bug&#10;&#10;已知bug：&#10;数据导入的时候的清空情况&#10;&#10;todo：&#10;给fogDevices、sensors等在读入数据后进行实例构造">
+    <list default="true" id="aa7fcddf-4e28-48f6-bb11-026a66db9831" name="默认更改列表" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/core/Bridge.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/core/Bridge.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/core/FogDeviceGuiData.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/core/FogDeviceGuiData.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/core/Graph.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/core/Graph.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/dialog/AddLink$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/dialog/AddLink$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/dialog/AddLink.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/dialog/AddLink.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/example/FogGui$11.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/example/FogGui$11.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/example/FogGui$12.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/example/FogGui$12.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/example/FogGui$13.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/example/FogGui$13.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/example/FogGui$14.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/example/FogGui$14.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/example/FogGui$15.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/example/FogGui$15.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/example/FogGui$16.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/example/FogGui$16.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/example/FogGui$17.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/example/FogGui$17.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/example/FogGui$18.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/example/FogGui$18.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/example/FogGui$19.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/example/FogGui$19.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/example/FogGui.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/iFogSim-master/org/fog/gui/example/FogGui.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/fog/gui/core/Bridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/fog/gui/core/Bridge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/fog/gui/core/FogDeviceGuiData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/fog/gui/core/FogDeviceGuiData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/fog/gui/core/Graph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/fog/gui/core/Graph.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iFogSim.md" beforeDir="false" afterPath="$PROJECT_DIR$/iFogSim.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/fog/gui/dialog/SDNRun.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/fog/gui/dialog/SDNRun.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -153,7 +138,14 @@
       <option name="project" value="LOCAL" />
       <updated>1602508151412</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="10.12 update：&#10;1、完成gui数据的导入&#10;2、修复了部分bug&#10;&#10;已知bug：&#10;数据导入的时候的清空情况&#10;&#10;todo：&#10;给fogDevices、sensors等在读入数据后进行实例构造">
+      <created>1602754654440</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1602754654440</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">

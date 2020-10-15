@@ -30,3 +30,7 @@ git pull origin master
 
 2. Redowan Mahmud and Rajkumar Buyya, <A href="http://www.buyya.com/papers/iFogSim-Tut.pdf">Modelling and Simulation of Fog and Edge Computing Environments using iFogSim Toolkit</A>, Fog and Edge Computing: Principles and Paradigms, Wiley Press, New York, USA, 2018 (in press).
 
+## What do we do(WirelessXY) ?
+1、we try to create a complete gui for ifogsim，by which we can input data easier.
+2、we  add some new characteristics for fogdevice like buffer , and try  new placement policy relatively 
+3、write document for iFogSim.
