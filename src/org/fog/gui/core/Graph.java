@@ -139,10 +139,10 @@ public class Graph implements Serializable {
 		adjacencyList.clear();
 	}
 	
-	public String toJsonString(){
+	/*public String toJsonString(){
 		String jsonText = Bridge.graphToJson(this);
 		return jsonText;
-	}
+	}*/
 	
 
 	@Override

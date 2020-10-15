@@ -15,7 +15,6 @@ import java.util.Map.Entry;
 import org.fog.entities.Actuator;
 import org.fog.entities.FogDevice;
 import org.fog.entities.Sensor;
-import org.fog.utils.JsonToTopology;
 import org.fog.utils.distribution.DeterministicDistribution;
 import org.fog.utils.distribution.Distribution;
 import org.fog.utils.distribution.NormalDistribution;
@@ -23,6 +22,8 @@ import org.fog.utils.distribution.UniformDistribution;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+
+import javax.swing.*;
 
 public class Bridge {
 
@@ -50,7 +51,11 @@ public class Bridge {
 		if(0 == type){
 			try {
 				JSONObject doc = (JSONObject) JSONValue.parse(new FileReader(fileName));
-	    		JSONArray nodes = (JSONArray) doc.get("nodes");
+			//	System.out.print(fileName+doc+"\n");
+	    		JSONArray nodeArray = (JSONArray) doc.get("nodes");
+	    		JSONObject nodeObject = (JSONObject) nodeArray.get(0);
+	    		JSONArray nodes = (JSONArray) nodeObject.get("nodes");
+	    	//	System.out.print("数据长度"+ nodes.size()+"测试输出\n"+nodes.toString()+"\n");
 	    		@SuppressWarnings("unchecked")//告知编译器忽略 unchecked警告信息
 				Iterator<JSONObject> iter =nodes.iterator(); 
 				while(iter.hasNext()){
@@ -116,7 +121,7 @@ public class Bridge {
 					}
 				}
 					
-				JSONArray links = (JSONArray) doc.get("links");
+				JSONArray links = (JSONArray) nodeObject.get("links");
 				@SuppressWarnings("unchecked")
 				Iterator<JSONObject> linksIter =links.iterator(); 
 				while(linksIter.hasNext()){
@@ -192,13 +197,12 @@ public class Bridge {
 	}
 
 
-	//重载jsonToGraph方法
-	public  static void jsonToGraph(String fileName,
+	//读取json数据进行修改
+	public  static Graph json2Graph(String fileName,
 									int type,
 									List<FogDevice> fogDevices,
 									List<Sensor> sensors ,
 									List <Actuator> actuators ,
-									Graph graph,
 									List <FogDeviceGuiData> fogDeviceGuiDataList,
 									List <SensorGuiData> sensorGuiDataList,
 									List <ActuatorGuiData> actuatorGuiDataList,
@@ -209,108 +213,24 @@ public class Bridge {
 		System.out.print("*****************");
 		try {
 			JSONObject doc = (JSONObject) JSONValue.parse(new FileReader(fileName));
-			JSONArray nodes = (JSONArray) doc.get("nodes");
-			@SuppressWarnings("unchecked")//告知编译器忽略 unchecked警告信息
-					Iterator<JSONObject> iter =nodes.iterator();
-			while(iter.hasNext()){
-				JSONObject node = iter.next();
-				String nodeType = (String) node.get("type");
-				String nodeName = (String) node.get("name");
-
-				if(nodeType.equalsIgnoreCase("host")){  //host
-					long pes = (Long) node.get("pes");
-					long mips = (Long) node.get("mips");
-					int ram = new BigDecimal((Long)node.get("ram")).intValueExact();
-					long storage = (Long) node.get("storage");
-					long bw = new BigDecimal((Long)node.get("bw")).intValueExact();
-
-					int num = 1;
-					if (node.get("nums")!= null)
-						num = new BigDecimal((Long)node.get("nums")).intValueExact();
-
-					for(int n = 0; n< num; n++) {
-						Node hNode = new HostNode(nodeName, nodeType, pes, mips, ram, storage, bw);
-						graph.addNode(hNode);
-					}
-
-				} else if(nodeType.equals("FOG_DEVICE")){
-					long mips = (Long) node.get("mips");
-					int ram = new BigDecimal((Long)node.get("ram")).intValueExact();
-					long upBw = new BigDecimal((Long)node.get("upBw")).intValueExact();
-					long downBw = new BigDecimal((Long)node.get("downBw")).intValueExact();
-					int level = new BigDecimal((Long)node.get("level")).intValue();
-					double rate = new BigDecimal((Double)node.get("ratePerMips")).doubleValue();
-
-					Node fogDevice = new FogDeviceGui(nodeName, mips, ram, upBw, downBw, level, rate);
-					graph.addNode(fogDevice);
-
-				} else if(nodeType.equals("SENSOR")){
-					String sensorType = node.get("sensorType").toString();
-					int distType = new BigDecimal((Long)node.get("distribution")).intValue();
-					Distribution distribution = null;
-					if(distType == Distribution.DETERMINISTIC)
-						distribution = new DeterministicDistribution(new BigDecimal((Double)node.get("value")).doubleValue());
-					else if(distType == Distribution.NORMAL){
-						distribution = new NormalDistribution(new BigDecimal((Double)node.get("mean")).doubleValue(),
-								new BigDecimal((Double)node.get("stdDev")).doubleValue());
-					} else if(distType == Distribution.UNIFORM){
-						distribution = new UniformDistribution(new BigDecimal((Double)node.get("min")).doubleValue(),
-								new BigDecimal((Double)node.get("max")).doubleValue());
-					}
-					System.out.println("Sensor type : "+sensorType);
-					Node sensor = new SensorGui(nodeName, sensorType, distribution);
-					graph.addNode(sensor);
-				} else if(nodeType.equals("ACTUATOR")){
-					String actuatorType = node.get("actuatorType").toString();
-					Node actuator = new ActuatorGui(nodeName, actuatorType);
-					graph.addNode(actuator);
-				} else {   //switch
-					int bw = new BigDecimal((Long)node.get("bw")).intValueExact();
-					long iops = (Long) node.get("iops");
-					int upports =  new BigDecimal((Long)node.get("upports")).intValueExact();
-					int downports = new BigDecimal((Long)node.get("downports")).intValueExact();
-
-					Node sNode = new SwitchNode(nodeName, nodeType, iops, upports, downports, bw);
-					graph.addNode(sNode);
-				}
-			}
-
-			JSONArray links = (JSONArray) doc.get("links");
-			@SuppressWarnings("unchecked")
-			Iterator<JSONObject> linksIter =links.iterator();
-			while(linksIter.hasNext()){
-				JSONObject link = linksIter.next();
-				String src = (String) link.get("source");
-				String dst = (String) link.get("destination");
-				double lat = (Double) link.get("latency");
-
-				Node source = (Node) getNode(graph, src);
-				Node target = (Node) getNode(graph, dst);
-
-				if(source!=null && target!=null){
-					System.out.println("Adding edge between "+source.getName()+" & "+target.getName());
-					Edge edge = new Edge(target, lat);
-					graph.addEdge(source, edge);
-				}
-			}
-			//以上为原有的处理graph的封包，接下来我们处理我们自己添加的一些数据格式。
-			JSONObject data = (JSONObject) JSONValue.parse(new FileReader(fileName));
 			//读取fogdevice
 			JSONArray fogDeviceData = (JSONArray) doc.get("fogDeviceData");
+			System.out.print("fogDeviceData:"+fogDeviceData.toString()+"\n");
 			@SuppressWarnings("unchecked")//告知编译器忽略 unchecked警告信息
 					Iterator<JSONObject> fogDeviceIter =fogDeviceData.iterator();
 			while(fogDeviceIter.hasNext()) {
 				JSONObject node = fogDeviceIter.next();
 				//因为数据格式我们都是知道的，所以我们直接对数据进行解析
 				String nodeName =(String) node.get("nodeName");
-				long   mips  = (Long)node.get("mips");
-				int ram = (int)node.get("ram");
-				long upBw = (Long) node.get("upBw");
-				long downBw = (Long) node.get("downBw");
-				int level = (int) node.get("level");
-				double ratePerMips = (double) node.get("ratePerMips");
-				double busyPower = (double) node.get("busyPower");
-				double idlePower = (double) node.get("idlePower");
+				long mips = (Long) node.get("mips");
+				int ram = new BigDecimal((Long)node.get("ram")).intValueExact();
+				long upBw = new BigDecimal((Long)node.get("upBw")).intValueExact();
+				long downBw = new BigDecimal((Long)node.get("downBw")).intValueExact();
+				int level = new BigDecimal((Long)node.get("level")).intValue();
+				double ratePerMips = new BigDecimal((Double)node.get("ratePerMips")).doubleValue();
+				double busyPower =  new BigDecimal((Double)node.get("busyPower")).doubleValue();
+				double idlePower =  new BigDecimal((Double)node.get("idlePower")).doubleValue();
+
 				FogDeviceGuiData addFogDeviceData = new FogDeviceGuiData(nodeName,mips,ram,upBw,downBw,level,ratePerMips,busyPower,idlePower);
 				fogDeviceGuiDataList.add(addFogDeviceData);
 				// TODO: 2020/9/28 将数据变成数据列表和fogdevice列表抽象出来，这样可以在addFogDevice和这里同时调用 
@@ -325,11 +245,11 @@ public class Bridge {
 				String name = (String) node.get("name");  //传感器名字
 				String sensorType = (String) node.get("sensorType");  //传感器类型
 				String distributionType = (String) node.get("distributionType");  //分布方式
-				double mean = (double) node.get("mean");  //
-				double stdDev = (double) node.get("stdDev"); //
-				double min = (double) node.get("min");  //
-				double max = (double) node.get("max");  //
-				double deterministicValue = (double) node.get("deterministicValue"); //
+				double mean =  new BigDecimal((Double)node.get("mean")).doubleValue();;  //
+				double stdDev =  new BigDecimal((Double)node.get("mean")).doubleValue();; //
+				double min =  new BigDecimal((Double)node.get("min")).doubleValue();;  //
+				double max =  new BigDecimal((Double)node.get("max")).doubleValue();;  //
+				double deterministicValue =  new BigDecimal((Double)node.get("deterministicValue")).doubleValue();; //
 				SensorGuiData addSensorData = new SensorGuiData(name, sensorType, distributionType, mean, stdDev, min, max, deterministicValue);
 				sensorGuiDataList.add(addSensorData);
 				//		sensors.add(addsensorData.getSensor());
@@ -353,31 +273,36 @@ public class Bridge {
 				JSONObject node= linkIter.next();
 				String startNodeName = (String) node.get("startNodeName");
 				String targetNodeName = (String) node.get("targetNodeName");
-				double latency = (double) node.get("latency");
+				double latency =  new BigDecimal((Double)node.get("latency")).doubleValue();;
 				LinkGuiData addLinkData = new LinkGuiData(startNodeName,targetNodeName,latency);
 				linkGuiDataList.add(addLinkData);
 				// TODO: 2020/9/28 数据格式添加
 
 			}
 
-
+			System.out.print("当前数据情况：fogdevice:"+fogDeviceGuiDataList.size()+
+														"\n sensor:"+sensorGuiDataList.size()+
+														"\n act:"+actuatorGuiDataList.size()+
+														"\n link"+linkGuiDataList.size()
+			);
 
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+		return jsonToGraph(fileName,0);
 	}
 
 	// convert from Graph object to JSON object
 	@SuppressWarnings("unchecked")
-	public static String graphToJson(Graph graph){
+	public static JSONObject graphToJson(Graph graph){
 		System.out.println();
 		System.out.println("****************************");
 		System.out.println(graph.getAdjacencyList());
 		System.out.println("****************************");
-		if(graph.getAdjacencyList().size() < 1){
+	/*	if(graph.getAdjacencyList().size() < 1){
 			return "Graph is Empty";
-		}
+		}*/
 		Map<Node, List<Node>> edgeList = new HashMap<Node, List<Node>>();
 		
 		JSONObject topo = new JSONObject();
@@ -490,8 +415,8 @@ public class Bridge {
 		}
 		topo.put("nodes", nodes);
 		topo.put("links", links);
-		
-		StringWriter out = new StringWriter();
+		return topo;
+	/*	StringWriter out = new StringWriter();
 		String jsonText = "";
 		try {
 			topo.writeJSONString(out);
@@ -499,15 +424,15 @@ public class Bridge {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		
 		//System.out.println(jsonText);
-		return jsonText;
+		//return jsonText;
 	}
 
 	//重载graphToJson方法
 	@SuppressWarnings("unchecked")
-    public static String  graphToJson(Graph graph ,
+    public static String  graph2Json(Graph graph ,
 									  List<FogDeviceGuiData> fogDevicesGuiDataList,
 									  List<SensorGuiData> sensorsGuiDataList,
 									  List<ActuatorGuiData> actuatorsGuiDataList,
@@ -515,7 +440,10 @@ public class Bridge {
         System.out.println("*****************************");
         System.out.println("start change");
         System.out.println("*****************************");
-        String graphString = graphToJson(graph);
+      //  String graphString = graphToJson(graph);
+		JSONObject graphInfo = graphToJson(graph);
+		JSONArray graphData = new JSONArray();
+		graphData.add(graphInfo);
         //上面是graph的输出
         // 输出fogDeviceGuiDataList
         //四个array放数据
@@ -542,6 +470,7 @@ public class Bridge {
 		allData.put("actuatorData",actuatorData);
 		allData.put("sensorData",sensorData);
 		allData.put("fogDeviceData",fogDeviceData);
+		allData.put("nodes",graphData);
 
 		//jsonToString
 		StringWriter out = new StringWriter();
@@ -553,7 +482,7 @@ public class Bridge {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return graphString + '\n'+jsonText;
+		return jsonText;
     }
 
 

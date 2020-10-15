@@ -122,7 +122,7 @@ public class FogDeviceGuiData {
         fogDeviceJson.put("downBw",getDownBw());
         fogDeviceJson.put("level",getLevel());
         fogDeviceJson.put("ratePerMips",getRatePerMips());
-        fogDeviceJson.put("bustPower",getBusyPower());
+        fogDeviceJson.put("busyPower",getBusyPower());
         fogDeviceJson.put("idlePower",getIdlePower());
         return fogDeviceJson;
     }
