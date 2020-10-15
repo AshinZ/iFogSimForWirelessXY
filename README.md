@@ -32,5 +32,7 @@ git pull origin master
 
 ## What do we do(WirelessXY) ?
 1、we try to create a complete gui for ifogsim，by which we can input data easier.
+
 2、we  add some new characteristics for fogdevice like buffer , and try  new placement policy relatively 
+
 3、write document for iFogSim.
