@@ -5,16 +5,24 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
+import org.cloudbus.cloudsim.Host;
+import org.cloudbus.cloudsim.Pe;
+import org.cloudbus.cloudsim.Storage;
+import org.cloudbus.cloudsim.power.PowerHost;
+import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
+import org.cloudbus.cloudsim.sdn.overbooking.BwProvisionerOverbooking;
+import org.cloudbus.cloudsim.sdn.overbooking.PeProvisionerOverbooking;
 import org.fog.entities.Actuator;
 import org.fog.entities.FogDevice;
+import org.fog.entities.FogDeviceCharacteristics;
 import org.fog.entities.Sensor;
+import org.fog.policy.AppModuleAllocationPolicy;
+import org.fog.scheduler.StreamOperatorScheduler;
+import org.fog.utils.FogLinearPowerModel;
+import org.fog.utils.FogUtils;
 import org.fog.utils.distribution.DeterministicDistribution;
 import org.fog.utils.distribution.Distribution;
 import org.fog.utils.distribution.NormalDistribution;
@@ -233,8 +241,10 @@ public class Bridge {
 
 				FogDeviceGuiData addFogDeviceData = new FogDeviceGuiData(nodeName,mips,ram,upBw,downBw,level,ratePerMips,busyPower,idlePower);
 				fogDeviceGuiDataList.add(addFogDeviceData);
-				// TODO: 2020/9/28 将数据变成数据列表和fogdevice列表抽象出来，这样可以在addFogDevice和这里同时调用 
-			//	fogDevices.add(addFogDeviceData.getFogDevice());
+				FogDevice addedfogdevide = createFogDevice(nodeName, mips, ram, upBw, downBw, level, ratePerMips, busyPower, idlePower);
+				fogDevices.add(addedfogdevide);
+				// TODO: 2020/9/28 将数据变成数据列表和fogdevice列表抽象出来，这样可以在addFogDevice和这里同时调用
+				// TODO: 2020/10/15 已解决
 			}
 
 			//sensorData
@@ -252,6 +262,8 @@ public class Bridge {
 				double deterministicValue =  new BigDecimal((Double)node.get("deterministicValue")).doubleValue();; //
 				SensorGuiData addSensorData = new SensorGuiData(name, sensorType, distributionType, mean, stdDev, min, max, deterministicValue);
 				sensorGuiDataList.add(addSensorData);
+				Sensor newSensor = new Sensor(name, sensorType, -1, "test", new DeterministicDistribution(deterministicValue));
+				sensors.add(newSensor);
 				//		sensors.add(addsensorData.getSensor());
 			}
 			//actuator
@@ -263,6 +275,8 @@ public class Bridge {
 				String actuatorType = (String) node.get("actuatorType");
 				ActuatorGuiData addActuatorData = new ActuatorGuiData(name,actuatorType);
 				actuatorGuiDataList.add(addActuatorData);
+				Actuator newActuator = new Actuator(name, -1, "test", actuatorType);
+				actuators.add(newActuator);
 				//   actuator.add(addactuatorData.getActuator());
 			}
 
@@ -277,7 +291,63 @@ public class Bridge {
 				LinkGuiData addLinkData = new LinkGuiData(startNodeName,targetNodeName,latency);
 				linkGuiDataList.add(addLinkData);
 				// TODO: 2020/9/28 数据格式添加
+				int sourceType = 0; //起始点类型 0 :fog 1:sensor   2: actuator
+				int targetType = 0; //指向点类型
+				int sourceNum  = 0;//起始点在相应集合中的序号
+				int targetId   = 0;//m目标点在相应集合中的序号
+				//	System.out.print(((Node) sourceNode.getSelectedItem()).getName());
+				for(int i = 0; i < fogDevices.size() ; ++i){
+					//		System.out.print(fogDevices.get(i).getName());
+					if(Objects.equals(fogDevices.get(i).getName(), startNodeName)){//是出发点
+						sourceType = 0;
+						sourceNum = i;
 
+					}
+					else if(Objects.equals(fogDevices.get(i).getName(), targetNodeName)) {
+						targetType = 0;
+						targetId = fogDevices.get(i).getId();
+					}
+				}
+
+				for(int i = 0; i < sensors.size() ; ++i){
+					if(Objects.equals(sensors.get(i).getName(), startNodeName)){//是出发点
+						sourceType = 1;
+						sourceNum = i;
+					}
+					else if(Objects.equals(sensors.get(i).getName(), targetNodeName)) {
+						targetType = 1;
+						targetId = sensors.get(i).getId();
+					}
+				}
+				for(int i = 0; i < actuators.size() ; ++i){
+					if(Objects.equals(actuators.get(i).getName(), startNodeName)){//是出发点
+						sourceType = 2;
+						sourceNum = i;
+					}
+					else if(Objects.equals(actuators.get(i).getName(), targetNodeName)) {
+						targetType = 2;
+						targetId = actuators.get(i).getId();
+					}
+				}
+				//设置id
+				if(0 == sourceType){
+					//		System.out.print("\n出发点id是"+sourceNum);
+					//		System.out.print("\n延时为"+Double.parseDouble(tfLatency.getText()));
+					//		System.out.print(fogDevices.get(sourceNum).getName());
+					fogDevices.get(sourceNum).setParentId(targetId);
+					fogDevices.get(sourceNum).setUplinkLatency(latency);
+				}
+				else if(1 == sourceType){
+					sensors.get(sourceNum).setGatewayDeviceId(targetId);
+					sensors.get(sourceNum).setLatency(latency);
+					System.out.println();
+					System.out.println("Set sensor to fog device");
+					System.out.println();
+				}
+				else{
+					actuators.get(sourceNum).setGatewayDeviceId(targetId);
+					actuators.get(sourceNum).setLatency(latency);
+				}
 			}
 
 			System.out.print("当前数据情况：fogdevice:"+fogDeviceGuiDataList.size()+
@@ -485,5 +555,56 @@ public class Bridge {
 		return jsonText;
     }
 
+	private static FogDevice createFogDevice(String nodeName, long mips,
+											 int ram, long upBw, long downBw, int level, double ratePerMips, double busyPower, double idlePower) {
 
+		List<Pe> peList = new ArrayList<Pe>();
+
+		// 3. Create PEs and add these into a list.
+		peList.add(new Pe(0, new PeProvisionerOverbooking(mips))); // need to store Pe id and MIPS Rating
+
+		int hostId = FogUtils.generateEntityId();
+		long storage = 1000000; // host storage
+		int bw = 10000;
+
+		PowerHost host = new PowerHost(
+				hostId,
+				new RamProvisionerSimple(ram),
+				new BwProvisionerOverbooking(bw),
+				storage,
+				peList,
+				new StreamOperatorScheduler(peList),
+				new FogLinearPowerModel(busyPower, idlePower)
+		);
+
+		List<Host> hostList = new ArrayList<Host>();
+		hostList.add(host);
+
+		String arch = "x86"; // system architecture
+		String os = "Linux"; // operating system
+		String vmm = "Xen";
+		double time_zone = 10.0; // time zone this resource located
+		double cost = 3.0; // the cost of using processing in this resource
+		double costPerMem = 0.05; // the cost of using memory in this resource
+		double costPerStorage = 0.001; // the cost of using storage in this
+		// resource
+		double costPerBw = 0.0; // the cost of using bw in this resource
+		LinkedList<Storage> storageList = new LinkedList<Storage>(); // we are not adding SAN
+		// devices by now
+
+		FogDeviceCharacteristics characteristics = new FogDeviceCharacteristics(
+				arch, os, vmm, host, time_zone, cost, costPerMem,
+				costPerStorage, costPerBw);
+
+		FogDevice fogdevice = null;
+		try {
+			fogdevice = new FogDevice(nodeName, characteristics,
+					new AppModuleAllocationPolicy(hostList), storageList, 10, upBw, downBw, 0, ratePerMips);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		fogdevice.setLevel(level);
+		return fogdevice;
+	}
 }

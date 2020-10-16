@@ -3,7 +3,26 @@
   <component name="ChangeListManager">
     <list default="true" id="aa7fcddf-4e28-48f6-bb11-026a66db9831" name="默认更改列表" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/fog/entities/FogDevice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/fog/entities/FogDevice.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/fog/entities/FogDeviceCharacteristics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/fog/entities/FogDeviceCharacteristics.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/fog/gui/.idea/gui.iml" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/fog/gui/.idea/gui.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/fog/gui/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/fog/gui/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/fog/gui/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/fog/gui/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/fog/gui/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/fog/gui/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/fog/gui/core/ActuatorGuiData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/fog/gui/core/ActuatorGuiData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/fog/gui/core/Bridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/fog/gui/core/Bridge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/fog/gui/core/FogDeviceGuiData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/fog/gui/core/FogDeviceGuiData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/fog/gui/core/FogGuiData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/fog/gui/core/FogGuiData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/fog/gui/core/LinkGuiData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/fog/gui/core/LinkGuiData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/fog/gui/core/SensorGuiData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/fog/gui/core/SensorGuiData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/fog/gui/dialog/AddFogDevice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/fog/gui/dialog/AddFogDevice.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/fog/gui/dialog/AddLink.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/fog/gui/dialog/AddLink.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/fog/gui/dialog/AddSensor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/fog/gui/dialog/AddSensor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/fog/gui/example/FogGui.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/fog/gui/example/FogGui.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/fog/gui/example/TestFogGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/fog/gui/example/TestFogGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/fog/test/perfeval/FirstSimple.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/fog/test/perfeval/FirstSimple.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/fog/test/perfeval/VRGameFog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/fog/test/perfeval/VRGameFog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/fog/utils/FogLinearPowerModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/fog/utils/FogLinearPowerModel.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -150,7 +169,14 @@
       <option name="project" value="LOCAL" />
       <updated>1602767652477</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="10.15 update：&#10;1、更新了ifogsim文档&#10;2、更新readme">
+      <created>1602767943591</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1602767943591</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">

@@ -8,10 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -211,33 +208,33 @@ public class AddLink extends JDialog {
 					//	System.out.print(((Node) sourceNode.getSelectedItem()).getName());
 						for(int i = 0; i < fogDevices.size() ; ++i){
 					//		System.out.print(fogDevices.get(i).getName());
-							if(fogDevices.get(i).getName() == ((Node) sourceNode.getSelectedItem()).getName() ){//是出发点
+							if(Objects.equals(fogDevices.get(i).getName(), ((Node) sourceNode.getSelectedItem()).getName())){//是出发点
 									sourceType = 0;
 									sourceNum = i;
 
 							}
-							else if(fogDevices.get(i).getName() == ((Node) targetNode.getSelectedItem()).getName() ) {
+							else if(Objects.equals(fogDevices.get(i).getName(), ((Node) targetNode.getSelectedItem()).getName())) {
 									targetType = 0;
 									targetId = fogDevices.get(i).getId();
 							}
 						}
 
 						for(int i = 0; i < sensors.size() ; ++i){
-							if(sensors.get(i).getName() == ((Node) sourceNode.getSelectedItem()).getName() ){//是出发点
+							if(Objects.equals(sensors.get(i).getName(), ((Node) sourceNode.getSelectedItem()).getName())){//是出发点
 								sourceType = 1;
 								sourceNum = i;
 							}
-							else if(sensors.get(i).getName() == ((Node) targetNode.getSelectedItem()).getName() ) {
+							else if(Objects.equals(sensors.get(i).getName(), ((Node) targetNode.getSelectedItem()).getName())) {
 								targetType = 1;
 								targetId = sensors.get(i).getId();
 							}
 						}
 						for(int i = 0; i < actuators.size() ; ++i){
-							if(actuators.get(i).getName() == ((Node) sourceNode.getSelectedItem()).getName() ){//是出发点
+							if(Objects.equals(actuators.get(i).getName(), ((Node) sourceNode.getSelectedItem()).getName())){//是出发点
 								sourceType = 2;
 								sourceNum = i;
 							}
-							else if(actuators.get(i).getName() == ((Node) targetNode.getSelectedItem()).getName() ) {
+							else if(Objects.equals(actuators.get(i).getName(), ((Node) targetNode.getSelectedItem()).getName())) {
 								targetType = 2;
 								targetId = actuators.get(i).getId();
 							}
@@ -253,6 +250,9 @@ public class AddLink extends JDialog {
 						else if(1 == sourceType){
 							sensors.get(sourceNum).setGatewayDeviceId(targetId);
 							sensors.get(sourceNum).setLatency(Double.parseDouble(tfLatency.getText()));
+							System.out.println();
+							System.out.println("Set sensor to fog device");
+							System.out.println();
 						}
 						else{
 							actuators.get(sourceNum).setGatewayDeviceId(targetId);

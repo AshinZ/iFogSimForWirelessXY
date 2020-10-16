@@ -94,6 +94,9 @@ public class FogGui extends JFrame {
 	static int numOfDepts = 2;
 	static int numOfMobilesPerDept = 2;
 	static double EEG_TRANSMISSION_TIME = 5.1;
+
+	static String appId = "test_gui"; // identifier of the application
+
 	public FogGui() {
         setDefaultCloseOperation(EXIT_ON_CLOSE);  //退出时的操作
         setPreferredSize(new Dimension(1280, 800)); //设置大小
@@ -683,7 +686,7 @@ public class FogGui extends JFrame {
     
     
     /** Application entry point */
-	public static void main(String args[]) throws InterruptedException {
+	public static void main(String []args) throws InterruptedException {
 		Log.disable();
 		int num_user = 1; // number of cloud users
 		Calendar calendar = Calendar.getInstance();
@@ -701,12 +704,6 @@ public class FogGui extends JFrame {
 		Log.printLine("Starting Simulation...");
 
 		try {
-
-
-			//CloudSim.init(num_user, calendar, trace_flag);
-
-			String appId = "test_gui"; // identifier of the application
-
 			FogBroker broker = new FogBroker("broker");
 
 			Application application = createApplication(appId, broker.getId());
