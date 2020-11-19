@@ -1,0 +1,130 @@
+{
+    "linkData": [
+        {
+            "targetNodeName": "proxy",
+            "latency": 10,
+            "startNodeName": "a"
+        },
+        {
+            "targetNodeName": "proxy",
+            "latency": 10,
+            "startNodeName": "b"
+        },
+        {
+            "targetNodeName": "cloud",
+            "latency": 10,
+            "startNodeName": "proxy"
+        }
+    ],
+    "nodes": [
+        {
+            "nodes": [
+                {
+                    "level": 3,
+                    "upBw": 100,
+                    "ratePerMips": 100,
+                    "name": "a",
+                    "type": "FOG_DEVICE",
+                    "mips": 100,
+                    "ram": 100,
+                    "downBw": 100
+                },
+                {
+                    "level": 1,
+                    "upBw": 100,
+                    "ratePerMips": 100,
+                    "name": "cloud",
+                    "type": "FOG_DEVICE",
+                    "mips": 100,
+                    "ram": 100,
+                    "downBw": 100
+                },
+                {
+                    "level": 3,
+                    "upBw": 100,
+                    "ratePerMips": 100,
+                    "name": "b",
+                    "type": "FOG_DEVICE",
+                    "mips": 100,
+                    "ram": 100,
+                    "downBw": 100
+                },
+                {
+                    "level": 2,
+                    "upBw": 100,
+                    "ratePerMips": 100,
+                    "name": "proxy",
+                    "type": "FOG_DEVICE",
+                    "mips": 100,
+                    "ram": 100,
+                    "downBw": 100
+                }
+            ],
+            "links": [
+                {
+                    "latency": 10,
+                    "destination": "proxy",
+                    "source": "a"
+                },
+                {
+                    "latency": 10,
+                    "destination": "proxy",
+                    "source": "b"
+                },
+                {
+                    "latency": 10,
+                    "destination": "cloud",
+                    "source": "proxy"
+                }
+            ]
+        }
+    ],
+    "actuatorData": [],
+    "fogDeviceData": [
+        {
+            "nodeName": "cloud",
+            "busyPower": 87.53,
+            "level": 1,
+            "upBw": 100,
+            "ratePerMips": 100,
+            "mips": 100,
+            "idlePower": 82.44,
+            "ram": 100,
+            "downBw": 100
+        },
+        {
+            "nodeName": "proxy",
+            "busyPower": 87.53,
+            "level": 2,
+            "upBw": 100,
+            "ratePerMips": 100,
+            "mips": 100,
+            "idlePower": 82.44,
+            "ram": 100,
+            "downBw": 100
+        },
+        {
+            "nodeName": "a",
+            "busyPower": 87.53,
+            "level": 3,
+            "upBw": 100,
+            "ratePerMips": 100,
+            "mips": 100,
+            "idlePower": 82.44,
+            "ram": 100,
+            "downBw": 100
+        },
+        {
+            "nodeName": "b",
+            "busyPower": 87.53,
+            "level": 3,
+            "upBw": 100,
+            "ratePerMips": 100,
+            "mips": 100,
+            "idlePower": 82.44,
+            "ram": 100,
+            "downBw": 100
+        }
+    ],
+    "sensorData": []
+}
